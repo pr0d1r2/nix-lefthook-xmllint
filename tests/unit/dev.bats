@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
-    load "${BATS_LIB_PATH}/bats-support/load.bash"
-    load "${BATS_LIB_PATH}/bats-assert/load.bash"
+    load "$BATS_LIB_PATH/bats-support/load"
+    load "$BATS_LIB_PATH/bats-assert/load"
 
     TMPDIR="$(mktemp -d)"
     git init "$TMPDIR/repo" >/dev/null 2>&1
