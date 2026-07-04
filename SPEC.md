@@ -63,7 +63,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 |---|---|---|
 | `x` | T01 | Extend `.envrc` to watch `flake.nix`, `flake.lock`, and `dev.sh` for changes via `watch_file` directives as required by the direnv skill. |
 | `x` | T02 | Harmonize bats library loading: `dev.bats` uses `load.bash` suffix while `lefthook-xmllint.bats` uses bare `load` — standardize to one form. |
-| `.` | T03 | Add `bats-file` library loading to `dev.bats` for consistency with `lefthook-xmllint.bats`. |
+| `x` | T03 | Add `bats-file` library loading to `dev.bats` for consistency with `lefthook-xmllint.bats`. |
 | `.` | T04 | Add edge-case tests for `lefthook-xmllint`: XML with BOM, empty file (0 bytes), file with `.xml` extension containing non-XML content, very large XML file. |
 | `.` | T05 | Remove `PROMPT.md` from tracked files — it is a task prompt, not project documentation. |
 | `.` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |

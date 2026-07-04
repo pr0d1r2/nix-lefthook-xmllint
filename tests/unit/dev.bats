@@ -3,6 +3,7 @@
 setup() {
     load "$BATS_LIB_PATH/bats-support/load"
     load "$BATS_LIB_PATH/bats-assert/load"
+    load "$BATS_LIB_PATH/bats-file/load"
 
     TMPDIR="$(mktemp -d)"
     git init "$TMPDIR/repo" >/dev/null 2>&1
