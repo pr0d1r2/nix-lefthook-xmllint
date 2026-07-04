@@ -71,3 +71,34 @@ EOF
     run lefthook-xmllint "$TEST_TEMP/good.xml" "$TEST_TEMP/bad.xml"
     assert_failure
 }
+
+@test "accepts valid XML file with BOM" {
+    printf '\xEF\xBB\xBF<?xml version="1.0" encoding="UTF-8"?>\n<root/>\n' \
+        > "$TEST_TEMP/bom.xml"
+    run lefthook-xmllint "$TEST_TEMP/bom.xml"
+    assert_success
+}
+
+@test "rejects empty file (0 bytes)" {
+    touch "$TEST_TEMP/empty.xml"
+    run lefthook-xmllint "$TEST_TEMP/empty.xml"
+    assert_failure
+}
+
+@test "rejects .xml file containing non-XML content" {
+    echo "this is not xml at all" > "$TEST_TEMP/notxml.xml"
+    run lefthook-xmllint "$TEST_TEMP/notxml.xml"
+    assert_failure
+}
+
+@test "accepts very large valid XML file" {
+    {
+        printf '<?xml version="1.0"?>\n<root>\n'
+        for i in $(seq 1 10000); do
+            printf '  <item id="%d">content %d</item>\n' "$i" "$i"
+        done
+        printf '</root>\n'
+    } > "$TEST_TEMP/large.xml"
+    run lefthook-xmllint "$TEST_TEMP/large.xml"
+    assert_success
+}
