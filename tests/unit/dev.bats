@@ -40,7 +40,7 @@ teardown() {
     export LEFTHOOK_LOG="$TMPDIR/log"
     # shellcheck disable=SC1091
     source "$TMPDIR/dev.sh"
-    assert [ -f "$LEFTHOOK_LOG" ]
+    assert_file_exists "$LEFTHOOK_LOG"
     run cat "$LEFTHOOK_LOG"
     assert_output "lefthook install"
 }
@@ -53,5 +53,5 @@ teardown() {
     export LEFTHOOK_LOG="$TMPDIR/log"
     # shellcheck disable=SC1091
     source "$TMPDIR/dev.sh"
-    assert [ ! -f "$LEFTHOOK_LOG" ]
+    assert_file_not_exists "$LEFTHOOK_LOG"
 }
