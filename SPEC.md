@@ -62,7 +62,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 | status | id | goal |
 |---|---|---|
 | `x` | T01 | Extend `.envrc` to watch `flake.nix`, `flake.lock`, and `dev.sh` for changes via `watch_file` directives as required by the direnv skill. |
-| `.` | T02 | Harmonize bats library loading: `dev.bats` uses `load.bash` suffix while `lefthook-xmllint.bats` uses bare `load` — standardize to one form. |
+| `x` | T02 | Harmonize bats library loading: `dev.bats` uses `load.bash` suffix while `lefthook-xmllint.bats` uses bare `load` — standardize to one form. |
 | `.` | T03 | Add `bats-file` library loading to `dev.bats` for consistency with `lefthook-xmllint.bats`. |
 | `.` | T04 | Add edge-case tests for `lefthook-xmllint`: XML with BOM, empty file (0 bytes), file with `.xml` extension containing non-XML content, very large XML file. |
 | `.` | T05 | Remove `PROMPT.md` from tracked files — it is a task prompt, not project documentation. |
@@ -74,7 +74,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 ## §B — Bugs / Known Issues
 
 1. **`.envrc` missing `watch_file` directives.** The direnv skill requires `.envrc` to watch `flake.nix`, `flake.lock`, and any nix modules or shell fragments. Currently it is just `use flake`, so changes to `dev.sh` or nix modules do not trigger direnv reload.
-2. **Inconsistent bats library load syntax.** `tests/unit/dev.bats` loads `bats-support/load.bash` and `bats-assert/load.bash` (with `.bash` extension), while `tests/unit/lefthook-xmllint.bats` loads `bats-support/load` and `bats-assert/load` (no extension). Both work but the inconsistency is confusing.
+2. ~~**Inconsistent bats library load syntax.**~~ Fixed: all bats files now use bare `load` (no `.bash` extension).
 3. **`dev.bats` missing `bats-file` load.** Unlike `lefthook-xmllint.bats`, `dev.bats` does not load the `bats-file` library, even though both test files are in the same suite.
 4. **Small embedded shell in `flake.nix`.** The `lefthook-nix-no-embedded-shell` wrapper (lines 163-167) prepends a `SCANNER=` variable via an inline Nix string before reading the external script. This technically violates the nix modularity rule, though it may be intentional to inject a Nix store path.
 5. **`PROMPT.md` tracked in git.** This file contains the agent task prompt, not project documentation. It should either be removed or added to `.gitignore`.
