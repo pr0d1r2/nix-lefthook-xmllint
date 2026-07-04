@@ -61,7 +61,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 
 | status | id | goal |
 |---|---|---|
-| `.` | T01 | Extend `.envrc` to watch `flake.nix`, `flake.lock`, and `dev.sh` for changes via `watch_file` directives as required by the direnv skill. |
+| `x` | T01 | Extend `.envrc` to watch `flake.nix`, `flake.lock`, and `dev.sh` for changes via `watch_file` directives as required by the direnv skill. |
 | `.` | T02 | Harmonize bats library loading: `dev.bats` uses `load.bash` suffix while `lefthook-xmllint.bats` uses bare `load` — standardize to one form. |
 | `.` | T03 | Add `bats-file` library loading to `dev.bats` for consistency with `lefthook-xmllint.bats`. |
 | `.` | T04 | Add edge-case tests for `lefthook-xmllint`: XML with BOM, empty file (0 bytes), file with `.xml` extension containing non-XML content, very large XML file. |
