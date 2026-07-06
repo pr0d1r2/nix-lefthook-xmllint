@@ -67,13 +67,13 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 | `x` | T04 | Add edge-case tests for `lefthook-xmllint`: XML with BOM, empty file (0 bytes), file with `.xml` extension containing non-XML content, very large XML file. |
 | `x` | T05 | Remove `PROMPT.md` from tracked files — it is a task prompt, not project documentation. |
 | `x` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |
-| `.` | T07 | Add `nix/direnv.sh` extraction as referenced in the direnv skill doc — currently `.envrc` is a single `use flake` line with no watch infrastructure. |
+| `x` | T07 | Add `nix/direnv.sh` extraction as referenced in the direnv skill doc — currently `.envrc` is a single `use flake` line with no watch infrastructure. |
 | `.` | T08 | Set `BATS_LIB_PATH` consistently across both `ci` and `default` devShells — `ci` sets it as an env var while `default` sets it via `dev.sh` string substitution. |
 | `.` | T09 | Add a `CONTRIBUTING.md` documenting the dev workflow: direnv setup, running tests, lefthook hook descriptions. |
 
 ## §B — Bugs / Known Issues
 
-1. **`.envrc` missing `watch_file` directives.** The direnv skill requires `.envrc` to watch `flake.nix`, `flake.lock`, and any nix modules or shell fragments. Currently it is just `use flake`, so changes to `dev.sh` or nix modules do not trigger direnv reload.
+1. ~~**`.envrc` missing `watch_file` directives.**~~ Fixed: `.envrc` now sources `nix/direnv.sh` which watches `flake.nix`, `flake.lock`, `dev.sh`, and `nix/lefthook-nix-no-embedded-shell.sh` for changes.
 2. ~~**Inconsistent bats library load syntax.**~~ Fixed: all bats files now use bare `load` (no `.bash` extension).
 3. **`dev.bats` missing `bats-file` load.** Unlike `lefthook-xmllint.bats`, `dev.bats` does not load the `bats-file` library, even though both test files are in the same suite.
 4. **Small embedded shell in `flake.nix`.** The `lefthook-nix-no-embedded-shell` wrapper (lines 163-167) prepends a `SCANNER=` variable via an inline Nix string before reading the external script. This technically violates the nix modularity rule, though it may be intentional to inject a Nix store path.
