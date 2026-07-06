@@ -161,10 +161,12 @@
           (wrap "lefthook-missing-final-newline" nix-lefthook-missing-final-newline-src { })
           (pkgs.writeShellApplication {
             name = "lefthook-nix-no-embedded-shell";
-            text = ''
-              SCANNER="${nix-lefthook-nix-no-embedded-shell-src}/scan-nix-no-embedded-shell.sh"
-            ''
-            + builtins.readFile "${nix-lefthook-nix-no-embedded-shell-src}/lefthook-nix-no-embedded-shell.sh";
+            text =
+              builtins.replaceStrings
+                [ "@SCANNER@" ]
+                [ "${nix-lefthook-nix-no-embedded-shell-src}/scan-nix-no-embedded-shell.sh" ]
+                (builtins.readFile ./nix/lefthook-nix-no-embedded-shell.sh)
+              + builtins.readFile "${nix-lefthook-nix-no-embedded-shell-src}/lefthook-nix-no-embedded-shell.sh";
           })
           (wrap "lefthook-nixfmt" nix-lefthook-nixfmt-src {
             runtimeInputs = [ pkgs.nixfmt ];
