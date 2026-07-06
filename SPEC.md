@@ -55,7 +55,7 @@ nix-lefthook-xmllint is a lefthook-compatible xmllint wrapper packaged as a Nix 
 
 ### Dev shell hook (`dev.sh`)
 
-Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `flake.nix`). Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
+Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
 
 ## §T — Tasks
 
@@ -68,7 +68,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 | `x` | T05 | Remove `PROMPT.md` from tracked files — it is a task prompt, not project documentation. |
 | `x` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |
 | `x` | T07 | Add `nix/direnv.sh` extraction as referenced in the direnv skill doc — currently `.envrc` is a single `use flake` line with no watch infrastructure. |
-| `.` | T08 | Set `BATS_LIB_PATH` consistently across both `ci` and `default` devShells — `ci` sets it as an env var while `default` sets it via `dev.sh` string substitution. |
+| `x` | T08 | Set `BATS_LIB_PATH` consistently across both `ci` and `default` devShells — `ci` sets it as an env var while `default` sets it via `dev.sh` string substitution. |
 | `.` | T09 | Add a `CONTRIBUTING.md` documenting the dev workflow: direnv setup, running tests, lefthook hook descriptions. |
 
 ## §B — Bugs / Known Issues
@@ -78,5 +78,5 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 3. **`dev.bats` missing `bats-file` load.** Unlike `lefthook-xmllint.bats`, `dev.bats` does not load the `bats-file` library, even though both test files are in the same suite.
 4. **Small embedded shell in `flake.nix`.** The `lefthook-nix-no-embedded-shell` wrapper (lines 163-167) prepends a `SCANNER=` variable via an inline Nix string before reading the external script. This technically violates the nix modularity rule, though it may be intentional to inject a Nix store path.
 5. ~~**`PROMPT.md` tracked in git.**~~ Fixed: `PROMPT.md` added to `.gitignore`.
-6. **`ci` devShell `BATS_LIB_PATH` divergence.** The `ci` shell sets `BATS_LIB_PATH` as a `mkShell` env attribute, while `default` sets it via string substitution in `dev.sh`. If the bats library path format changes, both must be updated independently.
+6. ~~**`ci` devShell `BATS_LIB_PATH` divergence.**~~ Fixed: both `ci` and `default` devShells now set `BATS_LIB_PATH` as a `mkShell` env attribute.
 7. **`SPEC.md` exceeds default file-size-check limit (2026-07-04).** `SPEC.md` (6528 bytes) exceeded the 4096-byte default limit in `config/lefthook/file_size_limits.yml`, causing CI `file-size-check` to fail. Fixed by adding `md: 10240` extension entry to the file size limits config.
