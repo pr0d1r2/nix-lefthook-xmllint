@@ -10,7 +10,7 @@ setup() {
     mkdir -p "$TMPDIR/repo/.git/hooks"
     touch "$TMPDIR/repo/.git/hooks/pre-commit"
 
-    sed 's|@BATS_LIB_PATH@|/test/lib|' dev.sh > "$TMPDIR/dev.sh"
+    cp dev.sh "$TMPDIR/dev.sh"
 
     mkdir -p "$TMPDIR/bin"
     cat > "$TMPDIR/bin/lefthook" <<'SH'
@@ -24,11 +24,14 @@ teardown() {
     rm -rf "$TMPDIR"
 }
 
-@test "sets BATS_LIB_PATH from placeholder" {
-    cd "$TMPDIR/repo"
-    run bash -c 'unset BATS_LIB_PATH; source "$1"; echo "$BATS_LIB_PATH"' -- "$TMPDIR/dev.sh"
-    assert_success
-    assert_output "/test/lib/share/bats"
+@test "does not set BATS_LIB_PATH" {
+    run grep -q 'BATS_LIB_PATH' dev.sh
+    assert_failure
+}
+
+@test "does not contain placeholder variables" {
+    run grep -q '@.*@' dev.sh
+    assert_failure
 }
 
 @test "runs lefthook install when hooks are missing" {

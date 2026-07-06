@@ -233,9 +233,8 @@
           };
           default = pkgs.mkShell {
             packages = ciCommon;
-            shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${batsWithLibs}" ] (
-              builtins.readFile ./dev.sh
-            );
+            BATS_LIB_PATH = "${batsWithLibs}/share/bats";
+            shellHook = builtins.readFile ./dev.sh;
           };
         }
       );
