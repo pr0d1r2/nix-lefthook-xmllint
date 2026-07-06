@@ -30,6 +30,11 @@ setup() {
     assert_success
 }
 
+@test "watches lefthook-xmllint.sh for changes" {
+    run grep -q 'watch_file lefthook-xmllint.sh' nix/direnv.sh
+    assert_success
+}
+
 @test "watches nix/lefthook-nix-no-embedded-shell.sh for changes" {
     run grep -q 'watch_file nix/lefthook-nix-no-embedded-shell.sh' nix/direnv.sh
     assert_success
