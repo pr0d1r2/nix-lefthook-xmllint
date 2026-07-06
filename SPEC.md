@@ -66,7 +66,7 @@ Sets `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder (substituted by `fla
 | `x` | T03 | Add `bats-file` library loading to `dev.bats` for consistency with `lefthook-xmllint.bats`. |
 | `x` | T04 | Add edge-case tests for `lefthook-xmllint`: XML with BOM, empty file (0 bytes), file with `.xml` extension containing non-XML content, very large XML file. |
 | `x` | T05 | Remove `PROMPT.md` from tracked files — it is a task prompt, not project documentation. |
-| `.` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |
+| `x` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |
 | `.` | T07 | Add `nix/direnv.sh` extraction as referenced in the direnv skill doc — currently `.envrc` is a single `use flake` line with no watch infrastructure. |
 | `.` | T08 | Set `BATS_LIB_PATH` consistently across both `ci` and `default` devShells — `ci` sets it as an env var while `default` sets it via `dev.sh` string substitution. |
 | `.` | T09 | Add a `CONTRIBUTING.md` documenting the dev workflow: direnv setup, running tests, lefthook hook descriptions. |

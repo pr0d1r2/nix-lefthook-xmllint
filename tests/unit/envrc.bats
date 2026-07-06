@@ -24,3 +24,8 @@ setup() {
     run grep -q "watch_file dev.sh" .envrc
     assert_success
 }
+
+@test ".envrc watches nix/lefthook-nix-no-embedded-shell.sh for changes" {
+    run grep -q "watch_file nix/lefthook-nix-no-embedded-shell.sh" .envrc
+    assert_success
+}
