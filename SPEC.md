@@ -69,7 +69,7 @@ Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
 | `x` | T06 | Extract the inline `SCANNER=` shell snippet in `flake.nix` (line 164-166) for the `lefthook-nix-no-embedded-shell` wrapper into a separate shell file to fully satisfy the nix modularity rule. |
 | `x` | T07 | Add `nix/direnv.sh` extraction as referenced in the direnv skill doc — currently `.envrc` is a single `use flake` line with no watch infrastructure. |
 | `x` | T08 | Set `BATS_LIB_PATH` consistently across both `ci` and `default` devShells — `ci` sets it as an env var while `default` sets it via `dev.sh` string substitution. |
-| `.` | T09 | Add a `CONTRIBUTING.md` documenting the dev workflow: direnv setup, running tests, lefthook hook descriptions. |
+| `x` | T09 | Add a `CONTRIBUTING.md` documenting the dev workflow: direnv setup, running tests, lefthook hook descriptions. |
 
 ## §B — Bugs / Known Issues
 
