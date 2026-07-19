@@ -46,11 +46,6 @@
           runtimeInputs = [ pkgs.libxml2 ];
           text = builtins.readFile ./lefthook-xmllint.sh;
         };
-          default = pkgs.mkShell {
-            packages = ciCommon;
-            BATS_LIB_PATH = "${batsWithLibs}/share/bats";
-            shellHook = builtins.readFile ./dev.sh;
-          };
         setting = (set-and-setting.lib.mkSetting { inherit pkgs; }).materialized;
       });
 
