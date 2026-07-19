@@ -1,0 +1,2 @@
+# flake.nix: confirm app uses nix-interpolated store paths as env vars
+flake.nix
