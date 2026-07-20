@@ -54,25 +54,50 @@
         let
           mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
           sys = pkgs.stdenv.hostPlatform.system;
+          batsWithLibraries = pkgs.bats.withLibraries (p: [
+            p.bats-assert
+            p.bats-file
+            p.bats-support
+          ]);
+          shells = set-and-setting.lib.mkDevShells {
+            inherit pkgs;
+            basePackages = mat.packages ++ [
+              self.packages.${sys}.default
+              batsWithLibraries
+            ];
+            settingHook = ''
+              ${self.packages.${sys}.setting}/bin/sync-setting .
+              _assemble_out="$(mktemp -d)"
+              FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
+                out="$_assemble_out" \
+                FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
+                bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
+              cp -f "$_assemble_out/lefthook.yml" lefthook.yml
+              rm -rf "$_assemble_out"
+            '';
+          };
         in
-        set-and-setting.lib.mkDevShells {
-          inherit pkgs;
-          basePackages = mat.packages;
-          settingHook = ''
-            ${self.packages.${sys}.setting}/bin/sync-setting .
-            _assemble_out="$(mktemp -d)"
-            FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
-              out="$_assemble_out" \
-              FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
-              bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-            cp -f "$_assemble_out/lefthook.yml" lefthook.yml
-            rm -rf "$_assemble_out"
-          '';
+        shells
+        // {
+          ci = pkgs.mkShell {
+            NIX_CONFIG = "experimental-features = nix-command flakes";
+            packages = mat.packages ++ [
+              self.packages.${sys}.default
+              batsWithLibraries
+            ];
+          };
         }
       );
 
       checks = forAllSystems (
         pkgs:
+        let
+          batsWithLibraries = pkgs.bats.withLibraries (p: [
+            p.bats-assert
+            p.bats-file
+            p.bats-support
+          ]);
+        in
         (set-and-setting.lib.checksFor {
           inherit pkgs fragments;
           src = ./.;
@@ -82,6 +107,22 @@
             inherit pkgs;
             projectRoot = ./.;
           };
+          unit =
+            pkgs.runCommand "unit-tests"
+              {
+                nativeBuildInputs = [
+                  self.packages.${pkgs.stdenv.hostPlatform.system}.default
+                  batsWithLibraries
+                  pkgs.git
+                ];
+              }
+              ''
+                cp -r ${./.} source
+                chmod -R u+w source
+                cd source
+                bats tests/unit
+                touch $out
+              '';
           default = pkgs.runCommand "checks" { } "touch $out";
         }
       );
@@ -105,7 +146,8 @@
                   pkgs.git
                   pkgs.gnugrep
                 ]
-                ++ mat.packages;
+                ++ mat.packages
+                ++ [ self.packages.${pkgs.stdenv.hostPlatform.system}.default ];
                 text = ''
                   export FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook"
                   export ASSEMBLE_SCRIPT="${set-and-setting}/setting/lib/assemble-lefthook.sh"

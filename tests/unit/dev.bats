@@ -1,9 +1,9 @@
 #!/usr/bin/env bats
 
 setup() {
-    load "$BATS_LIB_PATH/bats-support/load"
-    load "$BATS_LIB_PATH/bats-assert/load"
-    load "$BATS_LIB_PATH/bats-file/load"
+    bats_load_library bats-support
+    bats_load_library bats-assert
+    bats_load_library bats-file
 
     TMPDIR="$(mktemp -d)"
     git init "$TMPDIR/repo" >/dev/null 2>&1
@@ -13,8 +13,8 @@ setup() {
     cp dev.sh "$TMPDIR/dev.sh"
 
     mkdir -p "$TMPDIR/bin"
-    cat > "$TMPDIR/bin/lefthook" <<'SH'
-#!/usr/bin/env bash
+    printf '#!%s\n' "$(command -v bash)" > "$TMPDIR/bin/lefthook"
+    cat >> "$TMPDIR/bin/lefthook" <<'SH'
 echo "lefthook $*" >> "$LEFTHOOK_LOG"
 SH
     chmod +x "$TMPDIR/bin/lefthook"
