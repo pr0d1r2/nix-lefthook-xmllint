@@ -1,6 +1,13 @@
+# SPEC
+
 ## §D — Description
 
-nix-lefthook-xmllint is a lefthook-compatible xmllint wrapper packaged as a Nix flake. It filters `.xml` files from lefthook's staged or pushed file arguments, validates each with `xmllint --noout`, and exits non-zero if any file is malformed. It is designed for Nix-based projects that use lefthook for git hook management and can be consumed either as a lefthook remote (recommended) or as a flake input added to a project's devShell. The project targets developers working on Linux (x86_64, aarch64) and macOS (x86_64, aarch64).
+nix-lefthook-xmllint is a lefthook-compatible xmllint wrapper packaged as a Nix flake.
+It filters `.xml` files from lefthook's staged or pushed file arguments, validates each
+with `xmllint --noout`, and exits non-zero if any file is malformed. It is designed for
+Nix-based projects that use lefthook for git hook management and can be consumed either
+as a lefthook remote (recommended) or as a flake input added to a project's devShell.
+The project targets developers working on Linux (x86_64, aarch64) and macOS (x86_64, aarch64).
 
 ## §V — Invariants
 
@@ -76,8 +83,20 @@ Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
 1. ~~**`.envrc` missing `watch_file` directives.**~~ Fixed: `.envrc` now sources `nix/direnv.sh` which watches `flake.nix`, `flake.lock`, `dev.sh`, and `nix/lefthook-nix-no-embedded-shell.sh` for changes.
 2. ~~**Inconsistent bats library load syntax.**~~ Fixed: all bats files now use bare `load` (no `.bash` extension).
 3. **`dev.bats` missing `bats-file` load.** Unlike `lefthook-xmllint.bats`, `dev.bats` does not load the `bats-file` library, even though both test files are in the same suite.
-4. **Small embedded shell in `flake.nix`.** The `lefthook-nix-no-embedded-shell` wrapper (lines 163-167) prepends a `SCANNER=` variable via an inline Nix string before reading the external script. This technically violates the nix modularity rule, though it may be intentional to inject a Nix store path.
+4. **Small embedded shell in `flake.nix`.** The `lefthook-nix-no-embedded-shell` wrapper prepends a `SCANNER=`
+  variable via an inline Nix string before reading the external script. This technically violates the nix
+  modularity rule, though it may be intentional to inject a Nix store path.
 5. ~~**`PROMPT.md` tracked in git.**~~ Fixed: `PROMPT.md` added to `.gitignore`.
 6. ~~**`ci` devShell `BATS_LIB_PATH` divergence.**~~ Fixed: both `ci` and `default` devShells now set `BATS_LIB_PATH` as a `mkShell` env attribute.
 7. **`SPEC.md` exceeds default file-size-check limit (2026-07-04).** `SPEC.md` (6528 bytes) exceeded the 4096-byte default limit in `config/lefthook/file_size_limits.yml`, causing CI `file-size-check` to fail. Fixed by adding `md: 10240` extension entry to the file size limits config.
-8. ~~**`markdownlint`/`markdownlint-agentic` wrappers missing from flake (2026-07-14).**~~ Fixed: `lefthook.yml` declared `markdownlint` and `markdownlint-agentic` commands, but `flake.nix` never packaged the wrappers, so CI failed with `timeout: failed to run command 'lefthook-markdownlint': No such file or directory` (exit 127). Added `nix-lefthook-markdownlint-src` and `nix-lefthook-markdownlint-agentic-src` flake inputs and their `lefthookWrappersFor` entries (with the `is-markdown-agentic` helper and agentic config substitution).
+8. ~~**`markdownlint`/`markdownlint-agentic` wrappers missing from flake (2026-07-14).**~~ Fixed: `lefthook.yml`
+  declared `markdownlint` and `markdownlint-agentic` commands, but `flake.nix` never packaged the wrappers, so CI
+  failed with exit 127. Added `nix-lefthook-markdownlint-src` and `nix-lefthook-markdownlint-agentic-src` flake
+  inputs and their `lefthookWrappersFor` entries.
+9. ~~**Duplicate `default` attribute in `packages` output (2026-07-19).**~~ Fixed: migration commit left an orphaned
+  `mkShell` block as a second `default` inside `packages`, causing "attribute 'default' already defined". Removed
+  the stale block; devShells are now handled by `set-and-setting.lib.mkDevShells`.
+10. ~~**Confirm app missing lefthook wrappers on PATH (2026-07-19).**~~ Fixed: `nix run .#confirm` coherence
+  check failed because the confirm app's `runtimeInputs` did not include fragment-driven lefthook wrappers.
+  Added `mat.packages` from `materializationFor` to the confirm app's runtime inputs. Also added
+  `.nix-embedded-shell-allowlist` for the confirm app's nix-interpolated env-var wiring.
