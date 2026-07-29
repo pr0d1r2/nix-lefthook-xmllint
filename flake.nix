@@ -10,7 +10,7 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
-    set-and-setting.url = "github:pr0d1r2/set-and-setting";
+    set-and-setting.url = "github:pr0d1r2/set-and-setting/c6e93cc2b947df7c522dd42ec457593642c4f03a";
   };
 
   outputs =
