@@ -100,3 +100,8 @@ Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
   check failed because the confirm app's `runtimeInputs` did not include fragment-driven lefthook wrappers.
   Added `mat.packages` from `materializationFor` to the confirm app's runtime inputs. Also added
   `.nix-embedded-shell-allowlist` for the confirm app's nix-interpolated env-var wiring.
+11. ~~**`set-and-setting` flake update removed `lib` attribute (2026-07-29).**~~ Fixed: `nix flake update`
+  bumped `set-and-setting` to a revision (`d2fa92c`) that dropped its `lib` output, breaking all
+  `set-and-setting.lib.*` calls in `flake.nix` with `attribute 'lib' missing`. Pinned the input to
+  the last working revision (`c6e93cc`). Also raised the `.lock` file size limit from 65536 to 131072
+  since the transitive dependency tree produces a ~120 KB lock file.
