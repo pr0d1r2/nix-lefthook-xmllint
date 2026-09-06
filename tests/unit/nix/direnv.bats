@@ -49,3 +49,8 @@ setup() {
     run grep -E '^\s*[a-zA-Z_][a-zA-Z_0-9]*\s*\(\)' nix/direnv.sh
     assert_failure
 }
+
+@test "watches nix/outputs.nix for changes" {
+    run grep -q 'watch_file nix/outputs.nix' nix/direnv.sh
+    assert_success
+}
