@@ -105,3 +105,7 @@ Conditionally runs `lefthook install` when `.git/hooks/pre-commit` is missing.
   `set-and-setting.lib.*` calls in `flake.nix` with `attribute 'lib' missing`. Pinned the input to
   the last working revision (`c6e93cc`). Also raised the `.lock` file size limit from 65536 to 131072
   since the transitive dependency tree produces a ~120 KB lock file.
+12. **`lefthook-xmllint` missing from the confirm app PATH (2026-09-09).** The thin `flake.nix`
+  bypassed the repository-specific `nix/outputs.nix` module, so the generated `lefthook.yml`
+  referenced a command that the coherence check could not find. Fixed by importing `nix/outputs.nix`,
+  which adds the package to the materialization and confirm app runtime inputs.

@@ -21,18 +21,7 @@
       set-and-setting,
       ...
     }:
-    set-and-setting.lib.mkConsumerFlake {
+    import ./nix/outputs.nix {
       inherit self nixpkgs set-and-setting;
-      fragments = [
-        "base"
-        "actions"
-        "nix"
-        "shell"
-        "ascii"
-        "bats"
-        "markdown"
-        "yaml"
-      ];
-      src = ./.;
     };
 }
