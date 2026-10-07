@@ -14,3 +14,8 @@ setup() {
     run grep -q "source nix/direnv.sh" .envrc
     assert_success
 }
+
+@test ".envrc watches lefthook-xmllint.sh for changes" {
+    run grep -q "watch_file lefthook-xmllint.sh" .envrc
+    assert_success
+}
